@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using NotificationService;
 using NotificationService.Configuration;
+using NotificationService.DataAccess;
 
 var builder = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((context, configBuilder) =>
@@ -19,7 +21,20 @@ var builder = Host.CreateDefaultBuilder(args)
         services.AddHostedService<NotificationServiceWorker>();
 
         services.AddRabbitMq(notificationSettings);
+
+        services.AddDbContextFactory<NotificationContext>((services, optionsBuilder) =>
+        {
+            var connectionString = context.Configuration.GetConnectionString(Constants.PostgresConnectionString);
+            optionsBuilder.UseNpgsql(connectionString);
+        });
     });
 
 var host = builder.Build();
+
+using (var scope = host.Services.CreateScope())
+{
+    var ctx = scope.ServiceProvider.GetRequiredService<NotificationContext>();
+    await ctx.Database.MigrateAsync();
+}
+
 await host.RunAsync();
