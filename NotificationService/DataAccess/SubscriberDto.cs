@@ -1,9 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace NotificationService.DataAccess;
 
 [Table("subscribers", Schema = "notification")]
+[Index(nameof(BlogUserId), IsUnique = true)]
+[Index(nameof(TelegramId), IsUnique = true)]
 internal class SubscriberDto
 {
     [Key]
