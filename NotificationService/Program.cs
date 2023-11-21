@@ -20,6 +20,7 @@ var builder = Host.CreateDefaultBuilder(args)
         services.AddSingleton(notificationSettings);
         services.AddHostedService<NotificationServiceWorker>();
 
+        services.AddDomain();
         services.AddRabbitMq(notificationSettings);
 
         services.AddDbContextFactory<NotificationContext>((services, optionsBuilder) =>
@@ -27,6 +28,7 @@ var builder = Host.CreateDefaultBuilder(args)
             var connectionString = context.Configuration.GetConnectionString(Constants.PostgresConnectionString);
             optionsBuilder.UseNpgsql(connectionString);
         });
+
     });
 
 var host = builder.Build();

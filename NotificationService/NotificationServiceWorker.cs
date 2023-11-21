@@ -13,7 +13,7 @@ public class NotificationServiceWorker(
             {
                 this.logger.LogInformation("NotificationServiceWorker running at: {time}", DateTimeOffset.Now);
             }
-            await Task.Delay(20000, stoppingToken);
+            await Task.Delay(50000, stoppingToken);
         }
     }
 }
