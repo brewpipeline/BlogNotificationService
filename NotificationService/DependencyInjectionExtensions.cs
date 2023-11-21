@@ -12,8 +12,6 @@ internal static class DependencyInjectionExtensions
 
     internal static IServiceCollection AddRabbitMq(this IServiceCollection services, Configuration.NotificationServiceSettings notificationServiceSettings)
     {
-
-        services.AddTransient<IConsumer<SubscriptionStateChanged>, SubscriptionConsumer>();
         services.AddMassTransit(s =>
         {
             s.AddConsumer<SubscriptionConsumer>();

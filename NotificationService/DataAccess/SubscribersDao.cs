@@ -33,6 +33,7 @@ internal class SubscribersDao(
                 existing.LastUpdated = DateTime.UtcNow;
 
                 await context.SaveChangesAsync(cancellation);
+                return;
             }
 
             logger.LogInformation("There is nothing to update for {}", subscriber.BlogUserId);
