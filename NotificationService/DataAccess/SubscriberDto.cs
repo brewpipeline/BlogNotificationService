@@ -15,4 +15,6 @@ internal class SubscriberDto
     public long TelegramId { get; set; }
 
     public bool SendNotification { get; set; }
+
+    public DateTime LastUpdated { get; set; }
 }
