@@ -1,4 +1,7 @@
 using MassTransit;
+using NotificationService.DataAccess;
+using NotificationService.Events;
+using NotificationService.Interfaces;
 
 namespace NotificationService;
 
@@ -11,6 +14,8 @@ internal static class DependencyInjectionExtensions
     {
         services.AddMassTransit(s =>
         {
+            s.AddConsumer<SubscriptionConsumer>();
+
             s.UsingRabbitMq((context, configure) =>
             {
                 configure.ClearSerialization();
@@ -26,7 +31,8 @@ internal static class DependencyInjectionExtensions
                     x.Bind(notificationServiceSettings.QueueName);
                     x.ConcurrentMessageLimit = 1;
                     x.ConfigureConsumeTopology = false;
-                    x.Consumer(() => new Consumer());
+
+                    x.ConfigureConsumer<SubscriptionConsumer>(context);
                 });
             });
 
@@ -34,4 +40,9 @@ internal static class DependencyInjectionExtensions
 
         return services;
     }
+
+    internal static IServiceCollection AddDomain(this IServiceCollection services)
+        => services.AddTransient<ISubscribersDao, SubscribersDao>();
+
 }
+
