@@ -1,6 +1,8 @@
 using MassTransit;
 using NotificationService.DataAccess;
 using NotificationService.Interfaces;
+using NotificationService.Interfaces.Bot;
+using NotificationService.TelegramBot;
 
 namespace NotificationService;
 
@@ -53,7 +55,9 @@ internal static class DependencyInjectionExtensions
     }
 
     internal static IServiceCollection AddDomain(this IServiceCollection services)
-        => services.AddTransient<ISubscribersDao, SubscribersDao>();
+        => services
+            .AddTransient<ISubscribersDao, SubscribersDao>()
+            .AddSingleton<IBotClient, TelegramBotClient>();
 
 }
 
