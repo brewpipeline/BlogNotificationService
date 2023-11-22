@@ -7,7 +7,7 @@ namespace NotificationService.DataAccess;
 
 internal class SubscribersDao(
     IDbContextFactory<NotificationContext> dbContext,
-    ILogger<NotificationServiceWorker> logger) : ISubscribersDao
+    ILogger<SubscribersDao> logger) : ISubscribersDao
 {
     public async Task<IReadOnlyCollection<Subscriber>> GetActiveSubscribers(CancellationToken cancellation)
     {

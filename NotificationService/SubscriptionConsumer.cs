@@ -5,7 +5,7 @@ using NotificationService.Interfaces;
 
 namespace NotificationService;
 
-internal class SubscriptionConsumer(ISubscribersDao subscribersDao, ILogger<NotificationServiceWorker> logger)
+internal class SubscriptionConsumer(ISubscribersDao subscribersDao, ILogger<SubscriptionConsumer> logger)
     : IConsumer<SubscriptionStateChanged>,
     IConsumeMessageByHeader
 {

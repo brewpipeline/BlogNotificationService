@@ -11,7 +11,7 @@ internal class PostConsumer(
     ISubscribersDao subscribersDao,
     IBotClient botClient,
     SendingSettings settings,
-    ILogger<NotificationServiceWorker> logger)
+    ILogger<PostConsumer> logger)
     : IConsumer<NewPostPublished>, IConsumeMessageByHeader
 {
     public string HeaderValue => "newpostpublished";

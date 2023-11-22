@@ -7,13 +7,16 @@ namespace NotificationService.TelegramBot;
 internal class TelegramBotClient : IBotClient
 {
     private readonly Telegram.Bot.TelegramBotClient botClient;
+    private readonly ILogger<TelegramBotClient> logger;
 
     //TODO do not send if telegram init failed
-    public TelegramBotClient(IConfiguration configuration)
+    public TelegramBotClient(IConfiguration configuration, ILogger<TelegramBotClient> logger)
     {
         var botToken = configuration.GetConnectionString(Constants.BotTokenConnectionString) ?? string.Empty;
         botClient = new Telegram.Bot.TelegramBotClient(botToken);
+        this.logger = logger;
     }
+
 
     public async Task<bool> SendNotifications(IEnumerable<long> userIds, string message, CancellationToken cancellation)
     {
@@ -26,15 +29,21 @@ internal class TelegramBotClient : IBotClient
 
             if (chat is null)
             {
-                Console.WriteLine("Could not find chat by userID");
+                logger.LogError("Could not find chat by userID");
                 continue;
             }
 
-            await botClient.SendTextMessageAsync(chat.Id, message, cancellationToken: cancellation);
+            try
+            {
+                await botClient.SendTextMessageAsync(chat.Id, message, cancellationToken: cancellation);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "error sending message");
+            }
         }
 
-        Console.WriteLine($"NOTIFICATIONs SENT - {message}");
-
+        logger.LogInformation("NOTIFICATIONs SENT - {}", message);
         return true;
     }
 
