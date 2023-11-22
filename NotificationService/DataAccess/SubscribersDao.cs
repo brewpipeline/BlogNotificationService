@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Microsoft.EntityFrameworkCore;
 using NotificationService.Domain;
 using NotificationService.Interfaces;
@@ -8,6 +9,15 @@ internal class SubscribersDao(
     IDbContextFactory<NotificationContext> dbContext,
     ILogger<NotificationServiceWorker> logger) : ISubscribersDao
 {
+    public async Task<IReadOnlyCollection<Subscriber>> GetActiveSubscribers(CancellationToken cancellation)
+    {
+        using var context = await dbContext.CreateDbContextAsync(cancellation);
+        return
+            (await context.Subscribers
+                .Where(x => x.SendNotification == true).ToListAsync(cancellationToken: cancellation))
+                .Select(x => x.IntoDomain()).ToList();
+    }
+
     //split into repository method if logic became more complicated
     public async Task Save(Subscriber subscriber, CancellationToken cancellation)
     {

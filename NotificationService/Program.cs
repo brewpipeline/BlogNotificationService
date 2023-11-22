@@ -11,13 +11,24 @@ var builder = Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices((context, services) =>
     {
+        //rly??!!?
         NotificationServiceSettings getSettings(HostBuilderContext ctx) =>
             context.Configuration.GetSection(nameof(NotificationServiceSettings)).Get<NotificationServiceSettings>()
             ?? new();
+        var sendingSettings = context.Configuration
+            .GetSection(nameof(SendingSettings))
+            .Get<SendingSettings>() ?? new();
+
+        if (!sendingSettings.IsValid())
+        {
+            throw new ArgumentException("Send settings should be set"); // do not throw
+        }
 
         //TODO remove and register as transient when required
         var notificationSettings = getSettings(context);
         services.AddSingleton(notificationSettings);
+        services.AddSingleton(sendingSettings);
+
         services.AddHostedService<NotificationServiceWorker>();
 
         services.AddDomain();

@@ -12,4 +12,13 @@ internal static class DtoExtensions
             TelegramId = subscriber.TelegramId,
             LastUpdated = DateTime.UtcNow,
         };
+
+    public static Subscriber IntoDomain(this SubscriberDto subscriberDto)
+        => new()
+        {
+            Id = subscriberDto.Id,
+            BlogUserId = subscriberDto.BlogUserId,
+            TelegramId = subscriberDto.TelegramId,
+            SendNotification = subscriberDto.SendNotification,
+        };
 }

@@ -5,8 +5,12 @@ using NotificationService.Interfaces;
 
 namespace NotificationService;
 
-internal class SubscriptionConsumer(ISubscribersDao subscribersDao, ILogger<NotificationServiceWorker> logger) : IConsumer<SubscriptionStateChanged>
+internal class SubscriptionConsumer(ISubscribersDao subscribersDao, ILogger<NotificationServiceWorker> logger)
+    : IConsumer<SubscriptionStateChanged>,
+    IConsumeMessageByHeader
 {
+    public string HeaderValue => "subscriptionstatechanged";
+
     public async Task Consume(ConsumeContext<SubscriptionStateChanged> context)
     {
         var stateChanged = context.Message;
