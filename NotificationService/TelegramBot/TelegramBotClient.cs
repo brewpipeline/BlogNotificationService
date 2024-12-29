@@ -24,12 +24,13 @@ internal class TelegramBotClient : IBotClient
 
         foreach (var userId in userIds)
         {
+            //TODO configure logger to work with scopes correctly
             using var scope = logger.BeginScope("UserId: {}", userId);
 
             var result = await botClient.TryGetChatByUserId(userId);
             if (result.Chat is null)
             {
-                logger.LogError(result.Exception, "Could not find chat by userID");
+                logger.LogError(result.Exception, "Could not find chat by userID {}", userId);
                 continue;
             }
 
